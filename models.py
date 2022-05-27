@@ -1,13 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_migrate import Migrate
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
-
 
 from flask_login import UserMixin
 
@@ -21,3 +17,18 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class DailyExercise(db.Model):
+    __tablename__ = "daily_exercise"
+
+    id = db.Column(db.Integer, primary_key=True)
+    exercise_name = db.Column(db.String, nullable=False)
+    exercise_start_date = db.Column(db.DateTime, defualt=False)
+    exercise_end_date = db.Column(db.DateTime, defualt=False)
+
+    def __repr__(self):
+        return '<DailyExercise %r>' % self.exercise_name
+
+
+

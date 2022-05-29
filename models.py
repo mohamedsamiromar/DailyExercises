@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 from flask_login import UserMixin
 
@@ -29,6 +31,3 @@ class DailyExercise(db.Model):
 
     def __repr__(self):
         return '<DailyExercise %r>' % self.exercise_name
-
-
-

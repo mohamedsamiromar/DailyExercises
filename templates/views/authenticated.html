@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+  <input type="hidden" name="post_header" value="log out">
+  <input type="submit"  value="Logout">
+</form>
+</body>
+</html>

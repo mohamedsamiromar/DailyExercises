@@ -53,9 +53,10 @@ class DailyExercise(db.Model):
     __tablename__ = "daily_exercise"
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     exercise_name = db.Column(db.String, nullable=False)
-    exercise_start_date = db.Column(db.DateTime, defualt=False)
-    exercise_end_date = db.Column(db.DateTime, defualt=False)
+    exercise_start_date = db.Column(db.DateTime, nullable=False)
+    exercise_end_date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return '<DailyExercise %r>' % self.exercise_name

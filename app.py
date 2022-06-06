@@ -34,5 +34,6 @@ def hello_world():
                                login_form=forms.LoginForm(),
                                register_form=forms.RegistrationForm())
 
+
 if __name__ == '__main__':
     app.run()

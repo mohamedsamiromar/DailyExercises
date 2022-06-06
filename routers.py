@@ -75,6 +75,9 @@ def login():
                            )
 
 
+g
+
+
 # Register route
 @app.route("/register/", methods=("GET", "POST"), strict_slashes=False)
 def register():

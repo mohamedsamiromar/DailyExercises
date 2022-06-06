@@ -1,39 +1,37 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask_login import login_user, current_user, logout_user, login_required
-from models import User, bcrypt
-
-app = Flask(__name__)
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import forms
-
-db = SQLAlchemy(app)
+from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 
-migrate = Migrate(app, db)
+from flask_login import (
+    UserMixin,
+    login_user,
+    LoginManager,
+    current_user,
+    logout_user,
+    login_required,
+)
+
+login_manager = LoginManager()
+login_manager.session_protection = "strong"
+login_manager.login_view = "login"
+login_manager.login_message_category = "info"
+
+db = SQLAlchemy()
+migrate = Migrate()
+bcrypt = Bcrypt()
 
 
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
-def hello_world():
-    if forms.RegistrationForm().validate_on_submit():
-        register_form = forms.RegistrationForm()
-        hashed_password = bcrypt.generate_password_hash(register_form.password.data).decode('utf-8')
-        user = User(username=register_form.username.data,
-                    email=register_form.email.data,
-                    password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        user = User.query.filter_by(
-            email=forms.RegistrationForm().email.data).first()
+def create_app():
+    app = Flask(__name__)
 
-        if user and bcrypt.check_password_hash(
-                user.password, forms.RegistrationForm().password.data):
-            login_user(user)
-        # return redirect(url_for('hello_world')))
-        return render_template('index.html',
-                               login_form=forms.LoginForm(),
-                               register_form=forms.RegistrationForm())
+    app.secret_key = 'secret-key'
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
+    login_manager.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    bcrypt.init_app(app)
 
-if __name__ == '__main__':
-    app.run()
+    return app

@@ -9,13 +9,13 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 from flask_login import UserMixin
 
-
 app = Flask(__name__, template_folder='../templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "user"
@@ -27,7 +27,6 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
-
 
 
 class DailyExercise(db.Model):

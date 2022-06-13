@@ -75,7 +75,7 @@ def login():
                            )
 
 
-g
+
 
 
 # Register route

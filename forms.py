@@ -8,10 +8,10 @@ from wtforms import (
 )
 
 from flask_wtf import FlaskForm
-from wtforms.validators import InputRequired, Length, EqualTo, Email, Regexp ,Optional
+from wtforms.validators import InputRequired, Length, EqualTo, Email, Regexp, Optional
 import email_validator
 from flask_login import current_user
-from wtforms import ValidationError,validators
+from wtforms import ValidationError, validators
 from models import User
 
 
@@ -45,7 +45,6 @@ class register_form(FlaskForm):
             EqualTo("pwd", message="Passwords must match !"),
         ]
     )
-
 
     def validate_email(self, email):
         if User.query.filter_by(email=email.data).first():

@@ -14,6 +14,7 @@ from flask import (
     session
 )
 app = Flask(__name__)
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt

@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
@@ -14,8 +15,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
 from flask_login import UserMixin
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-db = SQLAlchemy(app)
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
+app.config['SQLALCHEMY_TRACK_MODIFICATION'] = Falsedb = SQLAlchemy(app)
 
 
 class User(UserMixin, db.Model):

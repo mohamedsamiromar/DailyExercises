@@ -2,10 +2,10 @@ from flask import Flask
 import os
 
 app = Flask(__name__)
-
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 bcrypt = Bcrypt()
@@ -15,9 +15,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
 from flask_login import UserMixin
-basedir = os.path.abspath(os.path.dirname(__file__))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
+basedir = os.path.abspath(os.path.dirname(__file__))
+from flask import render_template
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = Falsedb = SQLAlchemy(app)
 
 
@@ -48,7 +50,12 @@ class DailyExercise(db.Model):
 
 @app.route('/')
 def index():
-    return 'Hello, World'
+    return render_template('register.html')
+
+
+@app.route('/register')
+def register():
+    pass
 
 
 if __name__ == '__main__':

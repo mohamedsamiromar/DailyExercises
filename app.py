@@ -1,4 +1,4 @@
-from flask import Flask, flash
+from flask import Flask, flash, url_for
 import os
 
 app = Flask(__name__)
@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from forms import RegisterForm
-
+from flask import redirect
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 bcrypt = Bcrypt()
@@ -65,7 +65,8 @@ def register():
         user.password = hashed_password
         db.session.add(user)
         flash('Your Account Has Been Created! You Are Now Able To Login ّّّّ')
-        return render_template('register.html', title='Register', form=form)
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
 
 
 if __name__ == '__main__':

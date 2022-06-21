@@ -49,22 +49,23 @@ class DailyExercise(db.Model):
         return self.exercise_name
 
 
-@app.route('/')
-def index():
-    return render_template('register.html')
+# @app.route('/')
+# def index():
+#     return render_template('register.html')
 
 
 @app.route('/register', methods=(['GET', 'POST']))
 def register():
-    if RegisterForm.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(RegisterForm.password.data).decode('utf-8')
+    form = RegisterForm
+    if form.validate_on_submit(form):
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User()
-        user.username = RegisterForm.username.data
-        user.email = RegisterForm.email
+        user.username = form.username.data
+        user.email = form.email
         user.password = hashed_password
         db.session.add(user)
         flash('Your Account Has Been Created! You Are Now Able To Login ّّّّ')
-        return render_template('register.html', title='Register', form=RegisterForm)
+        return render_template('register.html', title='Register', form=form)
 
 
 if __name__ == '__main__':

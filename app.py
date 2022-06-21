@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from forms import RegisterForm
 from flask import redirect
+
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 bcrypt = Bcrypt()
@@ -21,7 +22,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 from flask import render_template
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATION'] = Falsedb = SQLAlchemy(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATION'] = SQLAlchemy(app)
+app.config['SECRET_KEY'] = "first flask app"
 
 
 class User(UserMixin, db.Model):
@@ -56,17 +58,18 @@ class DailyExercise(db.Model):
 
 @app.route('/register', methods=(['GET', 'POST']))
 def register():
-    form = RegisterForm
-    if form.validate_on_submit(form):
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+    forms = RegisterForm()
+    if forms.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(forms.password.data).decode('utf-8')
         user = User()
-        user.username = form.username.data
-        user.email = form.email
+        user.username = forms.username.data
+        user.email = forms.email
         user.password = hashed_password
         db.session.add(user)
+        db.session.commit()
         flash('Your Account Has Been Created! You Are Now Able To Login ّّّّ')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=forms)
 
 
 if __name__ == '__main__':

@@ -5,9 +5,9 @@ app = Flask(__name__)
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
-from forms import RegisterForm
-from flask import redirect
-
+from forms import RegisterForm, LoginForm
+from flask import redirect, request
+from flask_login import login_user, current_user, logout_user, login_required
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 bcrypt = Bcrypt()
@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
-from flask_login import UserMixin
+from flask_login import UserMixin, login_user
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 from flask import render_template
@@ -70,6 +70,22 @@ def register():
         flash('Your Account Has Been Created! You Are Now Able To Login ّّّّ')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=forms)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
 
 
 if __name__ == '__main__':

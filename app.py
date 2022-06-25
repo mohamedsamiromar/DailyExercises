@@ -1,13 +1,15 @@
 from flask import Flask, flash, url_for
 import os
 
+from pywin.dialogs import login
+
 app = Flask(__name__)
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from forms import RegisterForm, LoginForm
 from flask import redirect, request
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, logout_user, login_required, LoginManager
 
 db = SQLAlchemy()
 migrate = Migrate(app, db)
@@ -25,6 +27,10 @@ from flask import render_template
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "first flask app"
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
 class User(UserMixin, db.Model):
@@ -67,6 +73,7 @@ def register():
         flash('Your Account Has Been Created! You Are Now Able To Login ّّّّ')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=forms)
+
 
 
 @app.route("/login", methods=['GET', 'POST'])

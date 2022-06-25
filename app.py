@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from forms import RegisterForm, LoginForm
 from flask import redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
+
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 bcrypt = Bcrypt()
@@ -51,6 +52,7 @@ class DailyExercise(db.Model):
         return self.exercise_name
 
 
+@app.route('/')
 @app.route('/register', methods=(['GET', 'POST']))
 def register():
     forms = RegisterForm()

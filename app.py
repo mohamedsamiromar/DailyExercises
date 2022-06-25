@@ -51,11 +51,6 @@ class DailyExercise(db.Model):
         return self.exercise_name
 
 
-# @app.route('/')
-# def index():
-#     return render_template('register.html')
-
-
 @app.route('/register', methods=(['GET', 'POST']))
 def register():
     forms = RegisterForm()
@@ -89,4 +84,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

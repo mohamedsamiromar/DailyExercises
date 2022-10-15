@@ -9,9 +9,11 @@ class User(db.Model):
     username = db.Column(db.String(60), unique=True, nullable=False)
     email = db.Column(db.String(120),nullable=False)
     password = db.Column(db.String(), nullable=False, unique=True)
-    first_name = db.Column(db.String(80), nullable=False)
-    middle_name = db.Column(db.String(80), nullable=False)
-    Address = db.Column(db.String(120), nullable=False)
+    first_name = db.Column(db.String(120),nullable=False)
+    middle_name = db.Column(db.String(120),nullable=False)
+    last_name = db.Column(db.String(120),nullable=False)
+    mobile_phone = db.Column(db.Integer)
+    Address = db.Column(db.String(120),nullable=False)
     # daily_exercise = db.relationship("DailyExercise", back_populates="daily_exercise")
 
 

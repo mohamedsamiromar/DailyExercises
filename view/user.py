@@ -2,10 +2,11 @@ from email import message
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from sqlalchemy.exc import SQLAlchemyError
-from schema import UserRegisterSchema
+from schema import UserRegisterSchema, LoginSchema
 from models.user_model import User
 from db import db
 from passlib.hash import pbkdf2_sha256
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 
 blp = Blueprint("users", "Users", __name__, description="Operations on User")
@@ -22,6 +23,11 @@ class UserRegister(MethodView):
             username=user_data["username"],
             email = user_data["email"],
             password=pbkdf2_sha256.hash(user_data["password"]),
+            first_name =user_data["first_name"],
+            middle_name =user_data["middle_name"],
+            last_name=user_data["last_name"],
+            mobile_phone=user_data["mobile_phone"],
+            Address=user_data["Address"]
         )
         db.session.add(user)
         db.session.commit()
@@ -40,3 +46,19 @@ class GetUser(MethodView):
         if not user:
                 abort(404, message="User not found.")
         return user
+
+
+@blp.route("/login")
+class UserLogin(MethodView):
+    @blp.arguments(LoginSchema)
+    def post(self, user_data):
+        user = User.query.filter(
+            User.username == user_data["username"]
+        ).first()
+        print(user)
+        if user and pbkdf2_sha256.verify(user_data["password"], user.password):
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(user.id)
+            return {"access_token": access_token, "refresh_token": refresh_token}, 200
+
+        abort(401, message="Invalid credentials.")

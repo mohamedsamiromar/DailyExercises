@@ -16,7 +16,7 @@ blp = Blueprint("users", "Users", __name__, description="Operations on User")
 class UserRegister(MethodView):
     @blp.arguments(UserRegisterSchema)
     def post(self, user_data):
-        print(user_data)
+        print(user_data["username"])
         if User.query.filter(User.username == user_data["username"]).first():
             abort(409, message="A user with that username already exists.")
         user = User(
@@ -55,7 +55,6 @@ class UserLogin(MethodView):
         user = User.query.filter(
             User.username == user_data["username"]
         ).first()
-        print(user)
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             access_token = create_access_token(identity=user.id, fresh=True)
             refresh_token = create_refresh_token(user.id)

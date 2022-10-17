@@ -5,6 +5,8 @@ from db import db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from view.user import blp as UserBluePrint
+from view.daily_exercise import blp as DailyExerciseBluePrint
+from blocklist import  BLOCKLIST
 
 
 def create_app(db_url=None):
@@ -75,6 +77,7 @@ def create_app(db_url=None):
         )
 
     api.register_blueprint(UserBluePrint)
+    api.register_blueprint(DailyExerciseBluePrint)
     return app
 
 

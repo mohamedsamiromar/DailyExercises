@@ -17,3 +17,12 @@ class UserRegisterSchema(Schema):
 class LoginSchema(Schema):
     username = fields.Str()
     password = fields.Str()
+
+
+class DailyExerciseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    exercise_name = fields.Str()
+    exercise_start_date = fields.DateTime()
+    exercise_end_date = fields.DateTime()
+    # user_id = fields.Int(required=True, load_only=True)
+    user = fields.Nested(UserRegisterSchema(), dump_only=True)
